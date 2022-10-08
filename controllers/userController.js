@@ -1,6 +1,6 @@
 // ObjectId() method for converting studentId string into an ObjectId for querying database
-const { ObjectId } = require('mongoose').Types;
-const { Student, Course } = require('../models');
+const { ObjectId } = require("mongoose").Types;
+const { User, Thoughts } = require("../models");
 
 // TODO: Create an aggregate function to get the number of students overall
 const headCount = async () =>
@@ -9,14 +9,14 @@ const headCount = async () =>
     .then((numberOfStudents) => numberOfStudents);
 
 // Execute the aggregate method on the Student model and calculate the overall grade by using the $avg operator
-const grade = async (studentId) =>
-  Student.aggregate([
+const userData = async (studentId) =>
+  userData.aggregate([
     // TODO: Ensure we include only the student who can match the given ObjectId using the $match operator
     {
       // Your code here
     },
     {
-      $unwind: '$assignments',
+      $unwind: "$assignments",
     },
     // TODO: Group information for the student with the given ObjectId alongside an overall grade calculated using the $avg operator
     {
@@ -43,11 +43,11 @@ module.exports = {
   // Get a single student
   getSingleStudent(req, res) {
     Student.findOne({ _id: req.params.studentId })
-      .select('-__v')
+      .select("-__v")
       .lean()
       .then(async (student) =>
         !student
-          ? res.status(404).json({ message: 'No student with that ID' })
+          ? res.status(404).json({ message: "No student with that ID" })
           : res.json({
               student,
               grade: await grade(req.params.studentId),
@@ -69,7 +69,7 @@ module.exports = {
     Student.findOneAndRemove({ _id: req.params.studentId })
       .then((student) =>
         !student
-          ? res.status(404).json({ message: 'No such student exists' })
+          ? res.status(404).json({ message: "No such student exists" })
           : Course.findOneAndUpdate(
               { students: req.params.studentId },
               { $pull: { students: req.params.studentId } },
@@ -79,9 +79,9 @@ module.exports = {
       .then((course) =>
         !course
           ? res.status(404).json({
-              message: 'Student deleted, but no courses found',
+              message: "Student deleted, but no courses found",
             })
-          : res.json({ message: 'Student successfully deleted' })
+          : res.json({ message: "Student successfully deleted" })
       )
       .catch((err) => {
         console.log(err);
@@ -91,7 +91,7 @@ module.exports = {
 
   // Add an assignment to a student
   addAssignment(req, res) {
-    console.log('You are adding an assignment');
+    console.log("You are adding an assignment");
     console.log(req.body);
     Student.findOneAndUpdate(
       { _id: req.params.studentId },
@@ -102,7 +102,7 @@ module.exports = {
         !student
           ? res
               .status(404)
-              .json({ message: 'No student found with that ID :(' })
+              .json({ message: "No student found with that ID :(" })
           : res.json(student)
       )
       .catch((err) => res.status(500).json(err));
@@ -118,7 +118,7 @@ module.exports = {
         !student
           ? res
               .status(404)
-              .json({ message: 'No student found with that ID :(' })
+              .json({ message: "No student found with that ID :(" })
           : res.json(student)
       )
       .catch((err) => res.status(500).json(err));
