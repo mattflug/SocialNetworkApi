@@ -1,5 +1,5 @@
 var moment = require("moment"); // require
-moment().format();
+
 const { Schema, Types } = require("mongoose");
 
 const reactionSchema = new Schema(
