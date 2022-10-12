@@ -32,4 +32,4 @@ const reactionSchema = new Schema(
   }
 );
 
-module.exports = assignmentSchema;
+module.exports = reactionSchema;
