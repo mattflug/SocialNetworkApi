@@ -24,7 +24,7 @@ module.exports = {
   },
   // Get a single User
   getSingleUser(req, res) {
-    User.findOne({ _id: req.params.UserId })
+    User.findOne({ _id: req.params.userId })
       .select("-__v")
       .lean()
       .then(async (UserData) => res.json(UserData))
@@ -41,7 +41,7 @@ module.exports = {
   },
   // Delete a User and remove them from the course
   deleteUser(req, res) {
-    User.findOneAndRemove({ _id: req.params.UserId })
+    User.findOneAndRemove({ _id: req.params.userId })
       .then((UserData) => res.json(UserData))
       .catch((err) => {
         console.log(err);
@@ -54,22 +54,25 @@ module.exports = {
     console.log("You are adding an Friend");
 
     User.findOneAndUpdate(
-      { _id: req.param.userId },
-      { $addToSet: { Friends: req.params.friendId } },
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
       { runValidators: true, new: true }
     )
-      .then((UserData) =>
+      .then((UserData) => {
         !UserData
           ? res.status(404).json({ message: "No User found with that ID :(" })
-          : res.json(UserData)
-      )
-      .catch((err) => res.status(500).json(err));
+          : res.json(UserData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
   },
   // Remove Friend from a User
   removeFriend(req, res) {
     User.findOneAndUpdate(
-      { _id: req.params.UserId },
-      { $pull: { friend: { friendId: req.params.friendId } } },
+      { _id: req.params.userId },
+      { $pull: { friends:  req.params.friendId } },
       { runValidators: true, new: true }
     )
       .then((UserData) =>
@@ -79,4 +82,22 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-};
+
+
+  updateUser(req, res) {
+    console.log("You are adding an Friend");
+
+    User.findOneAndUpdate(
+      { _id: req.params.userId }, req.body
+    )
+      .then((UserData) => {
+        !UserData
+          ? res.status(404).json({ message: "No User found with that ID :(" })
+          : res.json(UserData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
+  }
+}
