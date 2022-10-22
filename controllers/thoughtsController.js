@@ -3,13 +3,13 @@ const { Thought, User, Thoughts } = require("../models");
 module.exports = {
   // Get all thoughts
   getThought(req, res) {
-    Thought.find()
+    Thoughts.find()
       .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
   },
   // Get a Thought
   getSingleThought(req, res) {
-    Thought.findOne({ _id: req.params.ThoughtId })
+    Thoughts.findOne({ _id: req.params.ThoughtId })
       .select("-__v")
       .then((thoughts) =>
         !Thoughts
@@ -20,7 +20,7 @@ module.exports = {
   },
   // Create a thought
   createThought(req, res) {
-    Thought.create(req.body)
+    Thoughts.create(req.body)
       .then((thought) => res.json(thought))
       .catch((err) => {
         console.log(err);
@@ -29,8 +29,8 @@ module.exports = {
   },
   // Delete a thought
   deleteThought(req, res) {
-    Thought.findOneAndDelete({ _id: req.params.ThoughtId })
-      .then((thought) => res.json(thoughtData))
+    Thoughts.findOneAndDelete({ _id: req.params.ThoughtId })
+      .then((thoughtData) => res.json(thoughtData))
       .then(() => res.json({ message: "Thought and students deleted!" }))
       .catch((err) => res.status(500).json(err));
   },
@@ -38,7 +38,7 @@ module.exports = {
   addReaction(req, res) {
     console.log("You are adding an Friend");
     console.log(req.body);
-    Thought.findOneAndUpdate(
+    Thoughts.findOneAndUpdate(
       { _id: req.params.ThoughtId },
       { $addToSet: { reactions: req.body } },
       { runValidators: true, new: true }
@@ -54,7 +54,7 @@ module.exports = {
   removeReaction(req, res) {
     console.log("You are adding an Friend");
     console.log(req.body);
-    Thought.findOneAndUpdate(
+    Thoughts.findOneAndUpdate(
       { _id: req.params.ThoughtId },
       { $pull: { reactions: req.params.reactionId } },
       { runValidators: true, new: true }
@@ -68,7 +68,7 @@ module.exports = {
   },
   // Update a thought
   updateThought(req, res) {
-    Thought.findOneAndUpdate(
+    Thoughts.findOneAndUpdate(
       { _id: req.params.ThoughtId },
       { $set: req.body },
       { runValidators: true, new: true }

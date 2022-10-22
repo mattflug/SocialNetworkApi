@@ -12,9 +12,8 @@ const {
 // /api/courses
 router.route("/").get(getThought).post(createThought);
 
-// /api/courses/:courseId
-router
-  .route("/:thoughtID")
+// /api/thoughts/:courseId
+router.route("/:thoughtID")
   .get(getSingleThought)
   .put(updateThought)
   .delete(deleteThought);
